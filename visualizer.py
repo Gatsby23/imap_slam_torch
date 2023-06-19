@@ -1,38 +1,42 @@
 import numpy as np
 import mcubes
 import OpenGL.GL as gl
-import pangolin
+import pypangolin as pango
 import threading
 import time
+
+
 class Visualizer(threading.Thread):
     def __init__(self):
         super(Visualizer, self).__init__()
         self.points = np.zeros((3,3), np.float32)
         self.colors = np.zeros((3,3), np.float32)
         self.is_run=True
+
+
     def run(self):
 
-        pangolin.CreateWindowAndBind('Main', 640, 480)
+        pango.CreateWindowAndBind('Main', 640, 480)
         gl.glEnable(gl.GL_DEPTH_TEST)
 
         # Define Projection and initial ModelView matrix
-        self.scam = pangolin.OpenGlRenderState(
-            pangolin.ProjectionMatrix(640, 480, 420, 420, 320, 240, 0.2, 100),
-            pangolin.ModelViewLookAt(-2, 2, -2, 0, 0, 0, pangolin.AxisDirection.AxisY))
-        handler = pangolin.Handler3D(self.scam)
+        self.camera_state = pango.OpenGlRenderState(
+            pango.ProjectionMatrix(640, 480, 420, 420, 320, 240, 0.2, 100),
+            pango.ModelViewLookAt(-2, 2, -2, 0, 0, 0, pango.AxisDirection.AxisY))
+        handler = pango.Handler3D(self.camera_state)
 
         # Create Interactive View in window
-        self.dcam = pangolin.CreateDisplay()
+        self.dcam = pango.CreateDisplay()
         self.dcam.SetBounds(0.0, 1.0, 0.0, 1.0, -640.0/480.0)
         self.dcam.SetHandler(handler)
-        while not pangolin.ShouldQuit() and self.is_run:
+        while not pango.ShouldQuit() and self.is_run:
 
             gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
             gl.glClearColor(1.0, 1.0, 1.0, 1.0)
-            self.dcam.Activate(self.scam)
+            self.dcam.Activate(self.camera_state)
 
             # Render OpenGL Cube
-            #pangolin.glDrawColouredCube()
+            #pango.glDrawColouredCube()
 
             # Draw Point Cloud
             #points = np.random.random((100000, 3)) * 10
@@ -46,12 +50,14 @@ class Visualizer(threading.Thread):
             gl.glEnableClientState(gl.GL_COLOR_ARRAY)
             gl.glColorPointer(3, gl.GL_FLOAT, 0, self.colors)
             gl.glDrawArrays(gl.GL_TRIANGLES, 0, self.points.shape[0])
-            #pangolin.glDrawVertices(points.shape[0], points, gl.GL_TRIANGLES)
-            #pangolin.DrawPoints(points)
+            #pango.glDrawVertices(points.shape[0], points, gl.GL_TRIANGLES)
+            #pango.DrawPoints(points)
 
-            pangolin.FinishFrame()
+            pango.FinishFrame()
             time.sleep(0.05)
         self.is_run=False
+
+
 def test():
     X, Y, Z = np.mgrid[:30, :30, :30]
     u = ((X-15)**2 + (Y-15)**2 + (Z-15)**2 - 8**2)
@@ -67,7 +73,7 @@ def test():
     vis.start()
     #vis.start()
     t = 0.0
-    while vis.is_run:#not pangolin.ShouldQuit():
+    while vis.is_run:#not pango.ShouldQuit():
     #    vis.draw()
     #    print("b")
         vis.points = vt +np.sin(t)
@@ -75,5 +81,7 @@ def test():
         t+=0.01
         time.sleep(0.01)
     vis.join()
+
+
 if __name__ == "__main__":
     test()
