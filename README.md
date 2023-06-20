@@ -1,6 +1,6 @@
 # iMAP SLAM in PyTorch
 
-This is an implementation of [iMAP SLAM](https://edgarsucar.github.io/iMAP/) in PyTorch, which is a cleaned up version of [ueda0319's iMAP](https://github.com/ueda0319/iMAP_pytorch) implementation.  Thanks to ueda0319 for the original implementation!  I mostly went through refactoring, renaming for clarity, and added lots of comments as I learned through reading his code.  Hopefully this can help others to learn NERF and NERF based SLAM algorithms.
+This is an implementation of [iMAP SLAM](https://edgarsucar.github.io/iMAP/) in PyTorch, which is a cleaned up version of [ueda0319's iMAP](https://github.com/ueda0319/iMAP_pytorch) implementation.  This version is edited for a beginner to understand, with descriptive variable names, lots of comments, and minor tweaks.  Hopefully this can help others to learn NERF and NERF based SLAM algorithms.  Thanks to ueda0319 for the original implementation!
 
 ![tum_test](https://github.com/ueda0319/iMAP_pytorch/wiki/imgs/teddy.gif)
 
